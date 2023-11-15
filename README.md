@@ -24,7 +24,7 @@
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/yourusername/stock-market-analysis-tool.git
+   git clone https://github.com/beepin6409/Stock-Market-Analysis-Tool-.git
 
 
 2. Install the required dependencies:
