@@ -35,16 +35,20 @@ def find_optimal_buy_sell_dates(stock_data):
     return best_buy_date, best_sell_date, best_buy_price, best_sell_price, max_cagr
 
 def main():
-    st.title("Stock Market Analysis Tool ")
 
-    
+
+    st.set_page_config(page_title="Stock Market Analysis Tool", page_icon="📈")
+
+    st.title("📈 Stock Market Analysis Tool")
+
+   
     # Get user input
     symbol = st.text_input("Enter the stock symbol (e.g., AAPL):")
     start_date = st.text_input("Enter the start date (YYYY-MM-DD):")
     end_date = st.text_input("Enter the end date (YYYY-MM-DD):")
     moving_average = st.text_input("Enter the number of days for moving average (0 for none):")
     
-    if st.button("Analyze"):
+    if st.button("Analyze Now!"):
         try:
             # Convert moving_average to an integer
             moving_average = int(moving_average)
@@ -55,7 +59,7 @@ def main():
             # Calculate moving average
             if moving_average > 0:
                 stock_data['Moving_Average'] = stock_data['Adj Close'].rolling(window=moving_average).mean()
-
+            
             # Calculate average price
             average_price = stock_data['Adj Close'].mean()
 
@@ -75,17 +79,20 @@ def main():
             investment_value = (initial_investment / initial_price) * final_price
 
             # Display the analysis results
-            st.write(f"Average Price: ${average_price:.2f}")
-            st.write(f"Lowest Price: ${lowest_price:.2f}")
-            st.write(f"Highest Price: ${highest_price:.2f}")
-            st.write(f"Percentage Change: {percentage_change:.2f}%")
-            st.write(f"Hypothetical Investment Value: ${investment_value:.2f} if you have invested 100 dollar on {start_date}")
+            info_style = "font-size: 18px; color: #333333; background-color: #f2f2f2; padding: 10px; border-radius: 5px; margin-top: 10px;"
+
+            st.write(f"<p style='{info_style}'>💰 Average Price: ${average_price:.2f}</p>", unsafe_allow_html=True)
+            st.write(f"<p style='{info_style}'>📉 Lowest Price: ${lowest_price:.2f}</p>", unsafe_allow_html=True)
+            st.write(f"<p style='{info_style}'>📈 Highest Price: ${highest_price:.2f}</p>", unsafe_allow_html=True)
+            st.write(f"<p style='{info_style}'>📊 Percentage Change: ${percentage_change:.2f}%</p>", unsafe_allow_html=True)
+            st.write(f"<p style='{info_style}'>💸 Hypothetical Investment Value: ${investment_value:.2f} if you invested $100 on {start_date}</p>", unsafe_allow_html=True)
+
 
             
 
             # Plot stock's closing prices and moving average
             st.write("Stock Price Chart:")
-            fig, ax = plt.subplots(figsize=(12, 6))
+            fig, ax = plt.subplots(figsize=(10, 6))
             ax.plot(stock_data.index, stock_data['Adj Close'], label=f'{symbol} Adjusted Close Price')
             if moving_average > 0:
                 ax.plot(stock_data.index, stock_data['Moving_Average'], label=f'{moving_average}-Day Moving Average')
@@ -97,15 +104,19 @@ def main():
             st.pyplot(fig)
 
             best_buy_date, best_sell_date, best_buy_price, best_sell_price, max_cagr = find_optimal_buy_sell_dates(stock_data)
+            
+            button_style = "font-size: 18px; color: #1d1d1d; background-color: #f2f2f2; padding: 10px; border-radius: 5px;"
+            error_style="width: 100%;margin: 0 auto;padding:20px;background-color: #ffb3f3;color:#1d1d1d;border-radius: 10px;"
 
             if max_cagr > 0:
-                st.write(f"Optimal Buying Date: {best_buy_date}")
-                st.write(f"Price at Buying Date: ${best_buy_price:.2f}")
-                st.write(f"Optimal Selling Date: {best_sell_date}")
-                st.write(f"Price at Selling Date: ${best_sell_price:.2f}")
-                st.write(f"CAGR: {max_cagr * 100:.2f}%")
+                st.write(f"<p style='{button_style}'>✅ Optimal Buying Date: {best_buy_date}</p>", unsafe_allow_html=True)
+                st.write(f"<p style='{button_style}'>💸 Price at Buying Date: ${best_buy_price:.2f}</p>", unsafe_allow_html=True)
+                st.write(f"<p style='{button_style}'>✅ Optimal Selling Date: {best_sell_date}</p>", unsafe_allow_html=True)
+                st.write(f"<p style='{button_style}'>💸 Price at Selling Date: ${best_sell_price:.2f}</p>", unsafe_allow_html=True)
+                st.write(f"<p style='{button_style}'>⚡ CAGR: {max_cagr * 100:.2f}%</p>", unsafe_allow_html=True)
+
             else:
-                st.write("No optimal buying and selling dates found with a 1-year difference.")
+                st.write(f"<p style='{error_style}'>⚠️ No optimal buying and selling dates found with a 1-year difference.</p>", unsafe_allow_html=True)
 
         except ValueError:
             st.error("Please enter valid input for the moving average.")
@@ -169,27 +180,23 @@ def main():
         }
     st.subheader("Here are the symbols of top 50 stocks of the Stock Market ")
     for symbol,company in common_stock_symbols.items():
-        st.write(symbol + ' : ' + company,end=' ')
-
+        st.write(symbol + ' : ' + company)
 
     st.markdown(
         """
         <style>
-        .marquee {
-            white-space: nowrap;
-            animation: marquee 10s linear infinite;
-        }
-
-        @keyframes marquee {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
+        .disclaimer {
+            width: 100%;
+            margin: 0 auto;
+            padding:20px;
+            background-color: #ffb3f3;
+            color:#1d1d1d;
+            border-radius: 10px;
         }
         </style>
-        <div class="marquee">
-            <p>
-            Disclaimer: The information provided by this tool is for educational purposes only. It is not financial advice, and you should not make investment decisions based solely on this tool. 
+        <div class="disclaimer">
+            ⚡ <b>Disclaimer:</b><br>The information provided by this tool is for educational purposes only. It is not financial advice, and you should not make investment decisions based solely on this tool. 
             Always do your own research and consult with a qualified financial professional before making investment decisions.
-            </p>
         </div>
         """,
         unsafe_allow_html=True
